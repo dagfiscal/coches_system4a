@@ -1,5 +1,5 @@
 from coches import coches
-from tkinter import Label,Entry,Button,Tk,messagebox,StringVar
+from tkinter import Label,Entry,Button,Tk,messagebox,StringVar,Menu
 
 
 class App:
@@ -15,8 +15,31 @@ class App:
       for widget in self.ventana.winfo_children():
           widget.destroy()
     
+    def barraMenu(self):
+        #Menu de Opciones
+        menuBar = Menu(self.ventana)
+        self.ventana.config(menu=menuBar)
+
+
+        menuPrincipal = Menu(menuBar , tearoff=False)
+        menuBar.add_cascade(label="Principal" , menu=menuPrincipal)
+        menuPrincipal.add_command(label="Menu Principal",command=self.main)
+        menuPrincipal.add_command(label="Menu Acciones",command=self.menu_acciones)
+        menuPrincipal.add_separator()
+        menuPrincipal.add_command(label="Salir",command=self.ventana.quit)
+                
+        accionesMenu = Menu(menuBar , tearoff=False)
+        menuBar.add_cascade(label="Acciones" , menu=accionesMenu)
+        accionesMenu.add_command(label="Agregar",command=self.insertar_view )
+        accionesMenu.add_command(label="Borrar",command=self.eliminar_view)
+        accionesMenu.add_command(label="Modificar",command=self.modificar_view)
+        accionesMenu.add_command(label="Mostrar",command=self.consultar_view)
+        accionesMenu.add_separator()
+        accionesMenu.add_command(label="Regresar",command=self.main)
+    
     def menu_acciones(self):
         self.borrarPantalla()
+        self.barraMenu()
         tipo="Coches"
         Label(self.ventana,text=f"\n...::: Menu de {tipo} :::... \n").pack(pady=10)
         Button(self.ventana,text="1.- Agregar",command=self.insertar_view).pack(pady=5)
@@ -26,13 +49,15 @@ class App:
         Button(self.ventana,text="5.- Regresar",command=self.main).pack(pady=5)
         
     def main(self):
-            self.borrarPantalla() 
+            self.borrarPantalla()
+            self.barraMenu() 
             Label(self.ventana,text="\n...::: M E N U   P R I N C I P A L :::...").pack(pady=10)    
             Button(self.ventana,text="1.- Coches",command=self.menu_acciones).pack(pady=5) 
             Button(self.ventana,text="2.- Salir",command=self.ventana.quit).pack(pady=5)  
     
     def insertar_view(self):
         self.borrarPantalla()
+        self.barraMenu()
         Label(self.ventana,text="...Ingresar los datos del Coche...").pack(pady=10)
         
         Label(self.ventana,text="Marca: ").pack(pady=5)
@@ -65,6 +90,7 @@ class App:
         
     def eliminar_view(self):
             self.borrarPantalla()
+            self.barraMenu()
             Label(self.ventana,text="...Ingresar el ID del Coche a Eliminar...").pack(pady=10)
             
             Label(self.ventana,text="ID: ").pack(pady=5)
@@ -82,6 +108,7 @@ class App:
         
     def modificar_view(self):
        self.borrarPantalla()
+       self.barraMenu()
        Label(self.ventana,text="...Ingresar el ID del Coche a modificar...").pack(pady=10)
                    
        Label(self.ventana,text="ID: ").pack(pady=5)
@@ -131,6 +158,7 @@ class App:
        
     def consultar_view(self):
         self.borrarPantalla()
+        self.barraMenu()
         Label(self.ventana,text=" ::: Consultar los Coches :::").pack(pady=10)
         filas=""  
         filas=self.consultar_controller(filas)
