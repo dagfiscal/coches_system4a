@@ -1,5 +1,5 @@
 from coches import coches
-from tkinter import Label,Entry,Button,Tk,messagebox,StringVar,Menu,Frame
+from tkinter import Label,Entry,Button,Tk,messagebox,StringVar,Menu,Frame,ttk
 
 
 class App:
@@ -176,12 +176,21 @@ class App:
         self.borrarPantalla()
         self.barraMenu()
         Label(self.ventana,text=" ::: Consultar los Coches :::").pack(pady=10)
-        filas=""  
-        filas=self.consultar_controller(filas)
-        Label(self.ventana,text=f"{'No.':<15}{'ID':<15}{'Marca':<15} {'Color':<15}{'Modelo':<15}{'Velocidad':<15}{'Potencia':<15}{'# Asientos':<15}").pack(pady=5)
-        Label(self.ventana,text=f"-"*100).pack(pady=5)
-        Label(self.ventana,text=f"{filas}").pack(pady=5)
-        Label(self.ventana,text=f"-"*100).pack(pady=5)
+        
+        # Tabla
+        self.tree =ttk.Treeview(self.ventana, columns=("ID", "Marca", "Color", "Modelo","Velocidad","Potencia","Asientos"), show="headings")
+        self.tree.heading("ID", text="ID")
+        self.tree.heading("Marca", text="Marca")
+        self.tree.heading("Color", text="Color")
+        self.tree.heading("Modelo", text="Modelo")
+        self.tree.heading("Velocidad", text="Velocidad")
+        self.tree.heading("Potencia", text="Potencia")
+        self.tree.heading("Asientos", text="Asientos")
+        self.tree.pack(fill="both", expand=False)
+        
+        #Colocara los datos en la tabla
+        self.mostrar_coches()
+        
         Button(self.ventana,text="Regresar",command=self.menu_acciones).pack(pady=5)
 
     def cambiar_estado_btn(self,estado,tipo_accion):
@@ -258,7 +267,14 @@ class App:
         else:
             messagebox.showerror(title="...¡ Verifica por favor !...",message=f"...¡El registro no fue encontrado, no es posible {tipo_accion}!...")
             self.cambiar_estado_btn(False,tipo_accion)  
+   
+    def mostrar_coches(self):
+        for row in self.tree.get_children():
+            self.tree.delete(row)
+        for row in coches.Coches.consultar():
+            self.tree.insert("", "end", values=row)
             
+                     
 if __name__=="__main__":
     ventana=Tk()
     app=App(ventana)
